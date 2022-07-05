@@ -203,7 +203,7 @@ public class CtrlAlquiler extends conexion {
         }
     }
 
-    public boolean modificar(Alquiler alq, int cod) {
+    public boolean modificar(Alquiler alq) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection cn = establecerConexion();
@@ -215,14 +215,14 @@ public class CtrlAlquiler extends conexion {
                 + "WHERE cod_Alquiler = ?";
         try {
             ps = cn.prepareStatement(sql);
-            ps.setString(4, alq.getDni());
-            ps.setInt(5, alq.getCod_Ofi_1_a());
-            ps.setInt(6, alq.getCod_Ofi_2_a());
-            ps.setInt(8, alq.getCod_reserva());
-            ps.setInt(8, alq.getCod_reserva());
-            ps.setString(7, alq.getNum_matricula());
-            ps.setInt(8, alq.getCod_reserva());
-            ps.setInt(1, alq.getCod_Alquiler());
+            ps.setString(1, alq.getDni());
+            ps.setInt(2, alq.getCod_Ofi_1_a());
+            ps.setInt(3, alq.getCod_Ofi_2_a());
+            ps.setInt(4, alq.getCod_reserva());
+            ps.setInt(5, alq.getCod_reserva());
+            ps.setString(6, alq.getNum_matricula());
+            ps.setInt(7, alq.getCod_reserva());
+            ps.setInt(8, alq.getCod_Alquiler());
             res = ps.executeUpdate();
             return res > 0;
         } catch (SQLException ex) {

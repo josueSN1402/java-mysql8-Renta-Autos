@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
+import javax.swing.JTextField;
 import modelo.Comprobacion;
 import tables.Alquiler;
 
@@ -205,8 +206,8 @@ public class frmAlquilar extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
-                            .addComponent(jcFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(16, 16, 16)
+                            .addComponent(jcFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -216,9 +217,8 @@ public class frmAlquilar extends javax.swing.JFrame {
                                 .addComponent(jLabel10)
                                 .addGap(117, 117, 117))
                             .addComponent(txtMatricula)))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel11)
-                        .addComponent(txtReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel11)
+                    .addComponent(txtReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -435,15 +435,93 @@ public class frmAlquilar extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        Alquiler alq = new Alquiler();
+        Comprobacion cv = new Comprobacion();
 
+        String codA = txtCodigo.getText();
+//        String fecIni = ((JTextField) jcFechaInicio.getDateEditor().getUiComponent()).getText();
+//        String fecFin = ((JTextField) jcFechaFinal.getDateEditor().getUiComponent()).getText();
+        String dni = txtDNI.getText();
+        String matri = txtMatricula.getText();
+        String ofi1 = (String) cboOfiR.getSelectedItem();
+        String ofi2 = (String) cboOfiE.getSelectedItem();
+        String reser = txtReserva.getText();
+
+        if (!dni.equals("")) {
+            int codAlq = Integer.parseInt(codA);
+            int codOf1 = Integer.parseInt(codA);
+            int codOf2 = Integer.parseInt(codA);
+            int codRes = Integer.parseInt(reser);
+
+            alq.setCod_Alquiler(codAlq);
+            alq.setCod_Alquiler(codAlq);
+            alq.setCod_Alquiler(codAlq);
+            alq.setCod_Alquiler(codAlq);
+            
+            if (modAl.modificar(alq)) {
+                JOptionPane.showMessageDialog(null, "Registro editado correctamente");
+                modAl.datos("", tbAlquiler);
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se puedo editar el registro");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingresar datos");
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        Alquiler alq = new Alquiler();
+        Comprobacion cv = new Comprobacion();
 
+        String codA = txtCodigo.getText();
+//        String fecIni = ((JTextField) jcFechaInicio.getDateEditor().getUiComponent()).getText();
+//        String fecFin = ((JTextField) jcFechaFinal.getDateEditor().getUiComponent()).getText();
+        String dni = txtDNI.getText();
+        String matri = txtMatricula.getText();
+        String ofi1 = (String) cboOfiR.getSelectedItem();
+        String ofi2 = (String) cboOfiE.getSelectedItem();
+        String reser = txtReserva.getText();
+
+        if (!dni.equals("")) {
+            int codAlq = Integer.parseInt(codA);
+            int codOf1 = Integer.parseInt(codA);
+            int codOf2 = Integer.parseInt(codA);
+            int codRes = Integer.parseInt(reser);
+
+            alq.setCod_Alquiler(codAlq);
+            alq.setCod_Alquiler(codAlq);
+            alq.setCod_Alquiler(codAlq);
+            alq.setCod_Alquiler(codAlq);
+            alq.setCod_Alquiler(codAlq);
+            
+            if (modAl.insertar(alq) > 0) {
+                JOptionPane.showMessageDialog(null, "Registro guardado");
+                modAl.datos("", tbAlquiler);
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo guardar el registro");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingresar datos");
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        String codA = txtCodigo.getText();
+        Comprobacion cv = new Comprobacion();
 
+        if (cv.esNumerico(codA)) {
+            if (modAl.eliminar(Integer.parseInt(codA)) > 0) {
+                JOptionPane.showMessageDialog(null, "Registro eliminado correctamente");
+                modAl.datos("", tbAlquiler);
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo eliminar el registro");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingresar Codigo correctamente");
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
