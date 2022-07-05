@@ -4,14 +4,9 @@ import config.CtrlAlquiler;
 import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.JOptionPane;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import modelo.Comprobacion;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import tables.Alquiler;
 
 public class frmAlquilar extends javax.swing.JFrame {
@@ -66,7 +61,6 @@ public class frmAlquilar extends javax.swing.JFrame {
         cboOfiR = new javax.swing.JComboBox<>();
         cboOfiE = new javax.swing.JComboBox<>();
         jcFechaInicio = new com.toedter.calendar.JDateChooser();
-        jButton1 = new javax.swing.JButton();
         jcFechaFinal = new com.toedter.calendar.JDateChooser();
         btnSalir = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
@@ -175,13 +169,6 @@ public class frmAlquilar extends javax.swing.JFrame {
 
         jcFechaInicio.setDateFormatString("yyyy-MM-dd");
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         jcFechaFinal.setDateFormatString("yyyy-MM-dd\n");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -214,7 +201,7 @@ public class frmAlquilar extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(cboOfiE, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
@@ -229,12 +216,9 @@ public class frmAlquilar extends javax.swing.JFrame {
                                 .addComponent(jLabel10)
                                 .addGap(117, 117, 117))
                             .addComponent(txtMatricula)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
-                            .addComponent(txtReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel11)
+                        .addComponent(txtReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -276,8 +260,7 @@ public class frmAlquilar extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txtReserva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboOfiE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboOfiR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(cboOfiR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -432,6 +415,8 @@ public class frmAlquilar extends javax.swing.JFrame {
                 txtDNI.setText(alq.getDni());
                 txtMatricula.setText(alq.getNum_matricula());
                 txtReserva.setText(String.valueOf(alq.getCod_reserva()));
+                cboOfiR.setSelectedIndex(cboIndex(cboOfiR, alq.getCod_Ofi_1_a()));
+                cboOfiE.setSelectedIndex(cboIndex(cboOfiE, alq.getCod_Ofi_2_a()));
                 try {
                     java.util.Date fechaInicio = new SimpleDateFormat("yyyy-MM-dd").parse(alq.getFecha_inicio_al().toString());
                     jcFechaInicio.setDate(fechaInicio);
@@ -466,18 +451,6 @@ public class frmAlquilar extends javax.swing.JFrame {
         frm.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            java.util.Date fechaParseada = new SimpleDateFormat("yyyy-MM-dd").parse("2022-01-04");
-            jcFechaInicio.setDate(fechaParseada);
-        } catch (ParseException ex) {
-            Logger.getLogger(frmAlquilar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        String fecIni = ((JTextField) jcFechaInicio.getDateEditor().getUiComponent()).getText();
-        JOptionPane.showMessageDialog(null, fecIni);
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     /*public static void main(String args[]) {
     try {
@@ -519,7 +492,6 @@ public class frmAlquilar extends javax.swing.JFrame {
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cboOfiE;
     private javax.swing.JComboBox<String> cboOfiR;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -557,5 +529,16 @@ public class frmAlquilar extends javax.swing.JFrame {
         cboOfiE.setSelectedIndex(0);
         txtReserva.setText(null);
         txtCodigo.requestFocus();
+    }
+
+    private int cboIndex(JComboBox cbo, int cod) {
+        String nomOfi = modAl.nomOficina(cod);
+        for (int i = 0; i < cbo.getItemCount(); i++) {
+            cbo.setSelectedIndex(i);
+            if (cbo.getSelectedItem().toString().equals(nomOfi)) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

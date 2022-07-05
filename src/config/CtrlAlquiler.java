@@ -120,6 +120,58 @@ public class CtrlAlquiler extends conexion {
         }
     }
 
+    public int codOficiona(String nom) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection cn = establecerConexion();
+        int codOfi = 0;
+        String sql = "SELECT cod_Oficina FROM oficina WHERE nom_Oficina = ?";
+        try {
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, nom);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                codOfi = rs.getInt(1);
+            }
+            return codOfi;
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return 0;
+        } finally {
+            try {
+                cn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CtrlAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public String nomOficina(int ofi) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection cn = establecerConexion();
+        String codOfi = "";
+        String sql = "SELECT nom_Oficina FROM oficina WHERE cod_Oficina = ?";
+        try {
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, ofi);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                codOfi = rs.getString(1);
+            }
+            return codOfi;
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return "";
+        } finally {
+            try {
+                cn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CtrlAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     public int insertar(Alquiler alq) {
         PreparedStatement ps = null;
         ResultSet rs = null;
