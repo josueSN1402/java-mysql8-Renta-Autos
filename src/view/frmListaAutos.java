@@ -3,14 +3,12 @@ package view;
 import config.CtrlCoches;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import modelo.Comprobacion;
 import tables.Coches;
 
 public class frmListaAutos extends javax.swing.JFrame {
 
     CtrlCoches modAuto = new CtrlCoches();
-    private DefaultTableModel modelo;
 
     public frmListaAutos() {
         initComponents();
