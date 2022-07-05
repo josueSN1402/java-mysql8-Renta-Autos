@@ -420,11 +420,51 @@ public class frmListaAutos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        Coches auto = new Coches();
+        Comprobacion cv = new Comprobacion();
 
+        String matri = txtMatri.getText();
+        String kmC = txtKm.getText();
+        int colorIn = cboColor.getSelectedIndex();
+        String marca = txtMarca.getText();
+        int modelIn = cboModelo.getSelectedIndex();
+        String preci = txtPrecio.getText();
+
+        if (!matri.equals("") && cv.esNumerico(kmC) && colorIn > 0 && !marca.equals("") && modelIn > 0 && cv.esNumerico(preci)) {
+            int km = Integer.parseInt(preci);
+            String color = (String) cboColor.getSelectedItem();
+            String model = (String) cboModelo.getSelectedItem();
+            int precio = Integer.parseInt(preci);
+            auto.setNumero_Matricula(matri);
+            auto.setKm(km);
+            auto.setColor(color);
+            auto.setModelo(model);
+            if (modAuto.insertar(auto) > 0) {
+                JOptionPane.showMessageDialog(null, "Registro guardado");
+                modAuto.datos("", tbCoches);
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo guardar el registro");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingresar datos");
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        String matri = txtMatri.getText();
 
+        if (!matri.equals("")) {
+            if (modAuto.eliminar(matri) > 0) {
+                JOptionPane.showMessageDialog(null, "Registro eliminado correctamente");
+                modAuto.datos("", tbCoches);
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo eliminar el registro");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingresar Matricula");
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
