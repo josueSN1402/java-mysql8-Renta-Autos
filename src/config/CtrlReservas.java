@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -69,6 +70,8 @@ public class CtrlReservas extends conexion {
                 reser.setCod_Reserva(rs.getInt("cod_Reserva"));
                 reser.setFecha_inicio_res(rs.getDate("fecha_inicio_res"));
                 reser.setFecha_final_res(rs.getDate("fecha_final_res"));
+//                reser.setFecha_inicio_res(rs.getDate("fecha_inicio_res").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+//                reser.setFecha_final_res(rs.getDate("fecha_final_res").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
                 reser.setPrecio_acordado(rs.getInt("precio_acordado"));
                 reser.setDni(rs.getString("dni"));
                 reser.setCod_Ofi_1_r(rs.getInt("cod_Ofi_1_r"));
@@ -85,6 +88,102 @@ public class CtrlReservas extends conexion {
                 cn.close();
             } catch (SQLException e) {
                 System.err.println(e);
+            }
+        }
+    }
+    public void cargarModelos(JComboBox cbo) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection cn = establecerConexion();
+        String sql = "SELECT cod_Modelo FROM modelos ORDER BY cod_Modelo ASC";
+        try {
+            ps = cn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                cbo.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        } finally {
+            try {
+                cn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CtrlAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+
+    public void cargarOficionas(JComboBox cbo) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection cn = establecerConexion();
+        String sql = "SELECT nom_Oficina FROM oficina ORDER BY nom_Oficina ASC";
+        try {
+            ps = cn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                cbo.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        } finally {
+            try {
+                cn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CtrlAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public int codOficiona(String nom) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection cn = establecerConexion();
+        int codOfi = 0;
+        String sql = "SELECT cod_Oficina FROM oficina WHERE nom_Oficina = ?";
+        try {
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, nom);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                codOfi = rs.getInt(1);
+            }
+            return codOfi;
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return 0;
+        } finally {
+            try {
+                cn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CtrlAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public String nomOficina(int ofi) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection cn = establecerConexion();
+        String codOfi = "";
+        String sql = "SELECT nom_Oficina FROM oficina WHERE cod_Oficina = ?";
+        try {
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, ofi);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                codOfi = rs.getString(1);
+            }
+            return codOfi;
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return "";
+        } finally {
+            try {
+                cn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CtrlAlquiler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -137,11 +236,7 @@ public class CtrlReservas extends conexion {
             ps.setString(8, reser.getModelo());
             ps.setString(9, cod);
             res = ps.executeUpdate();
-            if (res > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return res > 0;
         } catch (SQLException ex) {
             Logger.getLogger(CtrlReservas.class.getName()).log(Level.SEVERE, null, ex);
             return false;
