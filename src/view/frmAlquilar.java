@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
-import javax.swing.JTextField;
 import modelo.Comprobacion;
 import tables.Alquiler;
 
@@ -20,6 +19,13 @@ public class frmAlquilar extends javax.swing.JFrame {
         cboOfiR.addItem("- Selecionar -");
         cboOfiE.addItem("- Selecionar -");
         conexion();
+
+        /*
+        String date = ((JTextField) jcFechaInicio.getDateEditor().getUiComponent()).getText();
+        JOptionPane.showMessageDialog(null, date);
+        LocalDate fecIni = LocalDate.parse(date);
+        JOptionPane.showMessageDialog(null, fecIni);
+        */
     }
 
     private void conexion() {
@@ -205,21 +211,25 @@ public class frmAlquilar extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addComponent(jcFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(117, 117, 117))
-                            .addComponent(txtMatricula)))
-                    .addComponent(jLabel11)
-                    .addComponent(txtReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jcFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addGap(117, 117, 117))
+                                    .addComponent(txtMatricula)))
+                            .addComponent(jLabel11))
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(65, 65, 65))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -439,25 +449,23 @@ public class frmAlquilar extends javax.swing.JFrame {
         Comprobacion cv = new Comprobacion();
 
         String codA = txtCodigo.getText();
-//        String fecIni = ((JTextField) jcFechaInicio.getDateEditor().getUiComponent()).getText();
-//        String fecFin = ((JTextField) jcFechaFinal.getDateEditor().getUiComponent()).getText();
         String dni = txtDNI.getText();
         String matri = txtMatricula.getText();
         String ofi1 = (String) cboOfiR.getSelectedItem();
         String ofi2 = (String) cboOfiE.getSelectedItem();
         String reser = txtReserva.getText();
 
-        if (!dni.equals("")) {
-            int codAlq = Integer.parseInt(codA);
-            int codOf1 = Integer.parseInt(codA);
-            int codOf2 = Integer.parseInt(codA);
+        if (!dni.equals("") && cv.esNumerico(dni) && cv.esNumerico(reser)) {
+            int codAl = Integer.parseInt(codA);
             int codRes = Integer.parseInt(reser);
 
-            alq.setCod_Alquiler(codAlq);
-            alq.setCod_Alquiler(codAlq);
-            alq.setCod_Alquiler(codAlq);
-            alq.setCod_Alquiler(codAlq);
-            
+            alq.setCod_Alquiler(codAl);
+            alq.setDni(dni);
+            alq.setCod_Ofi_1_a(modAl.codOficiona(ofi1));
+            alq.setCod_Ofi_2_a(modAl.codOficiona(ofi2));
+            alq.setNum_matricula(matri);
+            alq.setCod_reserva(codRes);
+
             if (modAl.modificar(alq)) {
                 JOptionPane.showMessageDialog(null, "Registro editado correctamente");
                 modAl.datos("", tbAlquiler);
@@ -474,27 +482,21 @@ public class frmAlquilar extends javax.swing.JFrame {
         Alquiler alq = new Alquiler();
         Comprobacion cv = new Comprobacion();
 
-        String codA = txtCodigo.getText();
-//        String fecIni = ((JTextField) jcFechaInicio.getDateEditor().getUiComponent()).getText();
-//        String fecFin = ((JTextField) jcFechaFinal.getDateEditor().getUiComponent()).getText();
         String dni = txtDNI.getText();
         String matri = txtMatricula.getText();
         String ofi1 = (String) cboOfiR.getSelectedItem();
         String ofi2 = (String) cboOfiE.getSelectedItem();
         String reser = txtReserva.getText();
 
-        if (!dni.equals("")) {
-            int codAlq = Integer.parseInt(codA);
-            int codOf1 = Integer.parseInt(codA);
-            int codOf2 = Integer.parseInt(codA);
+        if (!dni.equals("") && cv.esNumerico(dni) && cv.esNumerico(reser)) {
             int codRes = Integer.parseInt(reser);
 
-            alq.setCod_Alquiler(codAlq);
-            alq.setCod_Alquiler(codAlq);
-            alq.setCod_Alquiler(codAlq);
-            alq.setCod_Alquiler(codAlq);
-            alq.setCod_Alquiler(codAlq);
-            
+            alq.setDni(dni);
+            alq.setCod_Ofi_1_a(modAl.codOficiona(ofi1));
+            alq.setCod_Ofi_2_a(modAl.codOficiona(ofi2));
+            alq.setNum_matricula(matri);
+            alq.setCod_reserva(codRes);
+
             if (modAl.insertar(alq) > 0) {
                 JOptionPane.showMessageDialog(null, "Registro guardado");
                 modAl.datos("", tbAlquiler);
@@ -550,12 +552,7 @@ public class frmAlquilar extends javax.swing.JFrame {
     
     java.awt.EventQueue.invokeLater(new Runnable() {
     public void run() {
-    try {
     new frmAlquilar().setVisible(true);
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-    Logger.getLogger(frmAlquilar.class.getName()).log(Level.SEVERE, null, ex);
-    }
     }
     });
     }*/
@@ -610,6 +607,17 @@ public class frmAlquilar extends javax.swing.JFrame {
     }
 
     private int cboIndex(JComboBox cbo, int cod) {
+        String nomOfi = modAl.nomOficina(cod);
+        for (int i = 0; i < cbo.getItemCount(); i++) {
+            cbo.setSelectedIndex(i);
+            if (cbo.getSelectedItem().toString().equals(nomOfi)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private int cboNom(JComboBox cbo, int cod) {
         String nomOfi = modAl.nomOficina(cod);
         for (int i = 0; i < cbo.getItemCount(); i++) {
             cbo.setSelectedIndex(i);
