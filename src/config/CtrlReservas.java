@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -91,7 +92,7 @@ public class CtrlReservas extends conexion {
             }
         }
     }
-    
+
     public void cargarModelos(JComboBox cbo) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -188,27 +189,27 @@ public class CtrlReservas extends conexion {
         }
     }
 
-    public int insertar(Reservas reser) {
+    public boolean insertar(Reservas reser) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection cn = establecerConexion();
+        SimpleDateFormat formatofecha = new SimpleDateFormat("yyyy-MM-dd");
         int res = 0;
-        String sql = "INSERT INTO reservas (cod_Reserva, fecha_inicio_res, fecha_final_res, precio_acordado, dni, cod_Ofi_1_r, cod_Ofi_2_r, modelo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Reservas (fecha_inicio_res, fecha_final_res, precio_acordado, dni, cod_Ofi_1_r, cod_Ofi_2_r, modelo) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             ps = cn.prepareStatement(sql);
-            ps.setInt(1, reser.getCod_Reserva());
-            ps.setDate(2, (Date) reser.getFecha_inicio_res());
-            ps.setDate(3, (Date) reser.getFecha_final_res());
-            ps.setDouble(4, reser.getPrecio_acordado());
-            ps.setString(5, reser.getDni());
-            ps.setInt(6, reser.getCod_Ofi_1_r());
-            ps.setInt(7, reser.getCod_Ofi_2_r());
-            ps.setString(8, reser.getModelo());
+            ps.setString(1, formatofecha.format(reser.getFecha_inicio_res()));
+            ps.setString(2, formatofecha.format(reser.getFecha_final_res()));
+            ps.setDouble(3, reser.getPrecio_acordado());
+            ps.setString(4, reser.getDni());
+            ps.setInt(5, reser.getCod_Ofi_1_r());
+            ps.setInt(6, reser.getCod_Ofi_2_r());
+            ps.setString(7, reser.getModelo());
             res = ps.executeUpdate();
-            return res;
+            return res > 0;
         } catch (SQLException ex) {
             Logger.getLogger(CtrlReservas.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
+            return false;
         } finally {
             try {
                 cn.close();

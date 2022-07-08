@@ -25,18 +25,18 @@ public class frmReserva extends javax.swing.JFrame {
         conexion();
         jPanel1.setOpaque(false);
 
-        //default time zone
+        /*//default time zone
         ZoneId defaultZoneId = ZoneId.systemDefault();
-
+        
         //creating the instance of LocalDate using the day, month, year info
         LocalDate localDate = LocalDate.of(2016, 8, 19);
-
+        
         //local date + atStartOfDay() + default time zone + toInstant() = Date
         Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-
+        
         //Displaying LocalDate and Date
         System.out.println("LocalDate is: " + localDate);
-        System.out.println("Date is: " + date);
+        System.out.println("Date is: " + date);*/
     }
 
     private void conexion() {
@@ -161,9 +161,9 @@ public class frmReserva extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "Datos de Reserva", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(51, 51, 51))); // NOI18N
 
-        dcFeIni.setDateFormatString("yyyy-MM-dd\n");
+        dcFeIni.setDateFormatString("yyyy-MM-dd");
 
-        dcFeFin.setDateFormatString("yyyy-MM-dd\n");
+        dcFeFin.setDateFormatString("yyyy-MM-dd");
 
         jLabel12.setForeground(new java.awt.Color(51, 51, 51));
         jLabel12.setText("Fecha Inicio");
@@ -505,19 +505,21 @@ public class frmReserva extends javax.swing.JFrame {
             reser.setCod_Ofi_2_r(modRes.codOficiona(ofi2));
             reser.setPrecio_acordado(precio);
 
-            ZoneId defaultZoneId = ZoneId.systemDefault();
-            String recojo = ((JTextField) dcFeIni.getDateEditor().getUiComponent()).getText();
-            String entrega = ((JTextField) dcFeIni.getDateEditor().getUiComponent()).getText();
+            // ZoneId defaultZoneId = ZoneId.systemDefault();
+            // String recojo = ((JTextField) dcFeIni.getDateEditor().getUiComponent()).getText();
+            // String entrega = ((JTextField) dcFeIni.getDateEditor().getUiComponent()).getText();
+//            String recojo = formatofecha.format(dcFeIni.getDate());
+//            String entrega = formatofecha.format(dcFeIni.getDate());
+            // LocalDate fecIniLD = LocalDate.parse(recojo);
+            // LocalDate fecFinLD = LocalDate.parse(entrega);
+            // Date fecIni = Date.from(fecIniLD.atStartOfDay(defaultZoneId).toInstant());
+            // Date fecFin = Date.from(fecFinLD.atStartOfDay(defaultZoneId).toInstant());
+            // reser.setFecha_inicio_res(fecIni);
+            // reser.setFecha_final_res(fecFin);
+            reser.setFecha_inicio_res(dcFeIni.getDate());
+            reser.setFecha_final_res(dcFeIni.getDate());
 
-            LocalDate fecIniLD = LocalDate.parse(recojo);
-            LocalDate fecFinLD = LocalDate.parse(entrega);
-
-            Date fecIni = Date.from(fecIniLD.atStartOfDay(defaultZoneId).toInstant());
-            Date fecFin = Date.from(fecFinLD.atStartOfDay(defaultZoneId).toInstant());
-            reser.setFecha_inicio_res(fecIni);
-            reser.setFecha_final_res(fecFin);
-            
-            if (modRes.insertar(reser) > 0) {
+            if (modRes.insertar(reser)) {
                 JOptionPane.showMessageDialog(null, "Registro guardado");
                 limpiar();
             } else {
@@ -551,30 +553,30 @@ public class frmReserva extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    /* public static void main(String args[]) {
-    try {
-    for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-    if ("Windows".equals(info.getName())) {
-    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-    break;
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new frmReserva().setVisible(true);
+            }
+        });
     }
-    }
-    } catch (ClassNotFoundException ex) {
-    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (InstantiationException ex) {
-    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (IllegalAccessException ex) {
-    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    java.awt.EventQueue.invokeLater(new Runnable() {
-    public void run() {
-    new frmReserva().setVisible(true);
-    }
-    });
-    }*/
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEditar;
