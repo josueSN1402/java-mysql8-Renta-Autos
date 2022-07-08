@@ -4,13 +4,11 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tables.Factura;
-import java.sql.Date;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 //import javax.swing.JOptionPane;
@@ -30,20 +28,20 @@ public class CtrlFactura extends conexion {
             ResultSet rs = null;
 
             String sql = "SELECT DISTINCT F.num_Factura, F.fecha, F.precio, F.igv, F.total, C.dni, concat(C.apellido_paterno, ' ', C.apellido_materno) AS Apellidos, "
-                        + "C.nombre, C.telefono, A.fecha_final_al, O1.nom_Oficina, O2.nom_Oficina "
-                        + "FROM bdrentaauto.factura AS F "
-                        + "inner join bdrentaauto.clientes AS C "
-                        + "ON F.dni = C.dni "
-                        + "inner join bdrentaauto.alquiler AS A "
-                        + "ON C.dni = A.dni "
-                        + "inner join bdrentaauto.reservas AS R "
-                        + "ON R.cod_Reserva = A.cod_reserva "
-                        + "inner join bdrentaauto.oficina AS O1 "
-                        + "ON R.cod_Ofi_1_r = O1.cod_Oficina "
-                        + "inner join bdrentaauto.oficina AS O2 "
-                        + "ON R.cod_Ofi_2_r = O2.cod_Oficina "
-                        + "WHERE F.num_Factura LIKE '%%' and C.dni LIKE '%%' and F.fecha = A.fecha_inicio_al "
-                        + "ORDER BY F.num_Factura ASC";
+                    + "C.nombre, C.telefono, A.fecha_final_al, O1.nom_Oficina, O2.nom_Oficina "
+                    + "FROM factura AS F "
+                    + "inner join clientes AS C "
+                    + "ON F.dni = C.dni "
+                    + "inner join alquiler AS A "
+                    + "ON C.dni = A.dni "
+                    + "inner join reservas AS R "
+                    + "ON R.cod_Reserva = A.cod_reserva "
+                    + "inner join oficina AS O1 "
+                    + "ON R.cod_Ofi_1_r = O1.cod_Oficina "
+                    + "inner join oficina AS O2 "
+                    + "ON R.cod_Ofi_2_r = O2.cod_Oficina "
+                    + "WHERE F.num_Factura LIKE '%%' and C.dni LIKE '%%' and F.fecha = A.fecha_inicio_al "
+                    + "ORDER BY F.num_Factura ASC";
             /* String sql = "SELECT F.num_Factura, F.fecha, F.precio, F.igv, F.total, C.dni, concat(C.apellido_paterno, ' ', C.apellido_materno) AS Apellidos, "
                     + "C.nombre, C.telefono AS 'telefono', A.fecha_final_al AS 'Entrega', O1.nom_Oficina AS 'Ofi recojer', O2.nom_Oficina AS 'Ofi entrega' "
                     + "FROM factura AS F "
@@ -134,18 +132,21 @@ public class CtrlFactura extends conexion {
         ResultSet rs = null;
         Connection cn = establecerConexion();
         int res = 0;
-        String sql = "INSERT INTO factura (fecha, precio, igv, total, dni, cod_Alquiler) VALUES ("
+        /* String sql = "INSERT INTO factura (fecha, precio, igv, total, dni, cod_Alquiler) VALUES ("
                     + "(SELECT A.fecha_inicio_al FROM  alquiler AS A WHERE A.dni = ? AND A.cod_Alquiler = ?),"
-                    +"?, ?, ?, ?, ?)";
+                    +"?, ?, ?, ?, ?)"; */
+        String sql = "INSERT INTO factura (fecha, precio, igv, total, dni, cod_Alquiler) VALUES ("
+                + "(SELECT R.fecha_inicio_res FROM  reservas AS R WHERE R.cod_Reserva = (SELECT A.cod_reserva FROM alquiler AS A WHERE A.cod_Alquiler = ?)), "
+                + "(SELECT R.precio_acordado FROM  reservas AS R WHERE R.cod_Reserva = (SELECT A.cod_reserva FROM alquiler AS A WHERE A.cod_Alquiler = ?)), "
+                + "?, ?, (SELECT A.dni FROM alquiler AS A WHERE A.cod_Alquiler = ?), ?)";
         try {
             ps = cn.prepareStatement(sql);
-            ps.setInt(1, fac.getNum_Factura());
-            ps.setDate(2, (Date) fac.getFecha());
-            ps.setDouble(3, fac.getTotal());
-            ps.setDouble(4, fac.getPrecio());
-            ps.setDouble(5, fac.getIgv());
-            ps.setString(6, fac.getDni());
-            ps.setDouble(7, fac.getCod_Alquiler());
+            ps.setInt(1, fac.getCod_Alquiler());
+            ps.setInt(2, fac.getCod_Alquiler());
+            ps.setDouble(3, fac.getIgv());
+            ps.setDouble(4, fac.getTotal());
+            ps.setInt(5, fac.getCod_Alquiler());
+            ps.setInt(6, fac.getCod_Alquiler());
             res = ps.executeUpdate();
             return res;
         } catch (SQLException ex) {
@@ -160,29 +161,28 @@ public class CtrlFactura extends conexion {
         }
     }
 
-    public boolean modificar(Factura fac, int nFac) {
+    public boolean modificar(Factura fac) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection cn = establecerConexion();
         int res = 0;
-        String sql = "UPDATE factura SET precio = ?, igv = ?, total = ?, dni = ?, cod_Alquiler = ?, fecha = "
-                    + "(SELECT A.fecha_inicio_al FROM  alquiler AS A WHERE A.dni = ? AND A.cod_Alquiler = ?) WHERE num_Factura = ?";
+        /* String sql = "UPDATE factura SET precio = ?, igv = ?, total = ?, dni = ?, cod_Alquiler = ?, fecha = "
+                    + "(SELECT A.fecha_inicio_al FROM  alquiler AS A WHERE A.dni = ? AND A.cod_Alquiler = ?) WHERE num_Factura = ?"; */
+        String sql = "UPDATE factura SET fecha = (SELECT R.fecha_inicio_res FROM  reservas AS R WHERE R.cod_Reserva = (SELECT A.cod_reserva FROM alquiler AS A WHERE A.cod_Alquiler = ?)),"
+                + "precio = (SELECT R.precio_acordado FROM  reservas AS R WHERE R.cod_Reserva = (SELECT A.cod_reserva FROM alquiler AS A WHERE A.cod_Alquiler = ?)), "
+                + "igv = ?, total = ?, dni = (SELECT A.dni FROM alquiler AS A WHERE A.cod_Alquiler = ?), "
+                + "cod_Alquiler = ? WHERE num_Factura = ?";
         try {
             ps = cn.prepareStatement(sql);
-            ps.setInt(1, fac.getNum_Factura());
-            ps.setDate(2, (Date) fac.getFecha());
-            ps.setDouble(3, fac.getTotal());
-            ps.setDouble(4, fac.getPrecio());
-            ps.setDouble(5, fac.getIgv());
-            ps.setString(6, fac.getDni());
-            ps.setDouble(7, fac.getCod_Alquiler());
-            ps.setInt(8, nFac);
+            ps.setInt(1, fac.getCod_Alquiler());
+            ps.setInt(2, fac.getCod_Alquiler());
+            ps.setDouble(3, fac.getIgv());
+            ps.setDouble(4, fac.getTotal());
+            ps.setInt(5, fac.getCod_Alquiler());
+            ps.setInt(6, fac.getCod_Alquiler());
+            ps.setInt(7, fac.getNum_Factura());
             res = ps.executeUpdate();
-            if (res > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return res > 0;
         } catch (SQLException ex) {
             Logger.getLogger(CtrlFactura.class.getName()).log(Level.SEVERE, null, ex);
             return false;

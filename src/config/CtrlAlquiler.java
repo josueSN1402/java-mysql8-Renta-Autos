@@ -171,7 +171,7 @@ public class CtrlAlquiler extends conexion {
         }
     }
 
-    public int insertar(Alquiler alq) {
+    public boolean insertar(int codRes) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection cn = establecerConexion();
@@ -180,60 +180,19 @@ public class CtrlAlquiler extends conexion {
                 + "(SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
                 + "?, ?, ?, ?, ?)"; */
         String sql = "INSERT INTO alquiler (fecha_inicio_al, fecha_final_al, dni, cod_Ofi_1_a, cod_Ofi_2_a, num_matricula, cod_reserva) VALUES ("
-                    +" (SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
-                    +" (SELECT dni FROM reservas where cod_Reserva = ?), (SELECT cod_Ofi_1_r FROM reservas where cod_Reserva = ?), "
-                    +" (SELECT cod_Ofi_2_r FROM reservas where cod_Reserva = ?), "
-                    +" (SELECT numero_Matricula FROM coches where modelo = (SELECT modelo FROM reservas where cod_Reserva = ?)), ?)"; 
+                + " (SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
+                + " (SELECT dni FROM reservas where cod_Reserva = ?), (SELECT cod_Ofi_1_r FROM reservas where cod_Reserva = ?), "
+                + " (SELECT cod_Ofi_2_r FROM reservas where cod_Reserva = ?), "
+                + " (SELECT numero_Matricula FROM coches where modelo = (SELECT modelo FROM reservas where cod_Reserva = ?)), ?)";
         try {
             ps = cn.prepareStatement(sql);
-            ps.setInt(1, alq.getCod_reserva());
-            ps.setInt(2, alq.getCod_reserva());
-            ps.setString(3, alq.getDni());
-            ps.setInt(4, alq.getCod_Ofi_1_a());
-            ps.setInt(5, alq.getCod_Ofi_2_a());
-            ps.setString(6, alq.getNum_matricula());
-            ps.setInt(7, alq.getCod_reserva());
-            res = ps.executeUpdate();
-            return res;
-        } catch (SQLException ex) {
-            Logger.getLogger(CtrlAlquiler.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
-        } finally {
-            try {
-                cn.close();
-            } catch (SQLException e) {
-                System.err.println(e);
-            }
-        }
-    }
-
-    public boolean modificar(Alquiler alq) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        Connection cn = establecerConexion();
-        int res = 0;
-        /* String sql = "UPDATE alquiler SET dni = ?, cod_Ofi_1_a = ?, cod_Ofi_2_a = ?, "
-                + "fecha_inicio_al = (SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), "
-                + "fecha_final_al = (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
-                + "num_matricula = ?, cod_reserva = ? "
-                + "WHERE cod_Alquiler = ?"; */
-        String sql = "UPDATE bdrentaauto.alquiler SET dni = (SELECT dni FROM reservas where cod_Reserva = ?), "
-                    + "cod_Ofi_1_a = (SELECT cod_Ofi_1_r FROM reservas where cod_Reserva = ?), "
-                    + "cod_Ofi_2_a = (SELECT cod_Ofi_2_r FROM reservas where cod_Reserva = ?), "
-                    + "fecha_inicio_al = (SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), "
-                    + "fecha_final_al = (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
-                    + "num_matricula = (SELECT numero_Matricula FROM coches where modelo = (SELECT modelo FROM reservas where cod_Reserva = ?)), "
-                    + "cod_reserva = ? WHERE cod_Alquiler = ?";
-        try {
-            ps = cn.prepareStatement(sql);
-            ps.setString(1, alq.getDni());
-            ps.setInt(2, alq.getCod_Ofi_1_a());
-            ps.setInt(3, alq.getCod_Ofi_2_a());
-            ps.setInt(4, alq.getCod_reserva());
-            ps.setInt(5, alq.getCod_reserva());
-            ps.setString(6, alq.getNum_matricula());
-            ps.setInt(7, alq.getCod_reserva());
-            ps.setInt(8, alq.getCod_Alquiler());
+            ps.setInt(1, codRes);
+            ps.setInt(2, codRes);
+            ps.setInt(3, codRes);
+            ps.setInt(4, codRes);
+            ps.setInt(5, codRes);
+            ps.setInt(6, codRes);
+            ps.setInt(7, codRes);
             res = ps.executeUpdate();
             return res > 0;
         } catch (SQLException ex) {
@@ -248,20 +207,61 @@ public class CtrlAlquiler extends conexion {
         }
     }
 
-    public int eliminar(int cod) {
+    public boolean modificar(int codRes, int codAl) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection cn = establecerConexion();
         int res = 0;
+        /* String sql = "UPDATE alquiler SET dni = ?, cod_Ofi_1_a = ?, cod_Ofi_2_a = ?, "
+                + "fecha_inicio_al = (SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), "
+                + "fecha_final_al = (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
+                + "num_matricula = ?, cod_reserva = ? "
+                + "WHERE cod_Alquiler = ?"; */
+        String sql = "UPDATE alquiler SET dni = (SELECT dni FROM reservas where cod_Reserva = ?), "
+                + "cod_Ofi_1_a = (SELECT cod_Ofi_1_r FROM reservas where cod_Reserva = ?), "
+                + "cod_Ofi_2_a = (SELECT cod_Ofi_2_r FROM reservas where cod_Reserva = ?), "
+                + "fecha_inicio_al = (SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), "
+                + "fecha_final_al = (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
+                + "num_matricula = (SELECT numero_Matricula FROM coches where modelo = (SELECT modelo FROM reservas where cod_Reserva = ?)), "
+                + "cod_reserva = ? WHERE cod_Alquiler = ?";
+        try {
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, codRes);
+            ps.setInt(2, codRes);
+            ps.setInt(3, codRes);
+            ps.setInt(4, codRes);
+            ps.setInt(5, codRes);
+            ps.setInt(6, codRes);
+            ps.setInt(7, codRes);
+            ps.setInt(8, codAl);
+            res = ps.executeUpdate();
+            return res > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(CtrlAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            try {
+                cn.close();
+            } catch (SQLException e) {
+                System.err.println(e);
+            }
+        }
+    }
+
+    public boolean eliminar(int cod) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection cn = establecerConexion();
+        int res;
         String sql = "DELETE FROM alquiler WHERE cod_Alquiler = ?";
         try {
             ps = cn.prepareStatement(sql);
             ps.setInt(1, cod);
             res = ps.executeUpdate();
-            return res;
+            return res > 0;
         } catch (SQLException ex) {
             Logger.getLogger(CtrlAlquiler.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
+            return false;
         } finally {
             try {
                 cn.close();

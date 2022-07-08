@@ -25,7 +25,7 @@ public class frmAlquilar extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, date);
         LocalDate fecIni = LocalDate.parse(date);
         JOptionPane.showMessageDialog(null, fecIni);
-        */
+         */
     }
 
     private void conexion() {
@@ -419,28 +419,16 @@ public class frmAlquilar extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        Alquiler alq = new Alquiler();
         Comprobacion cv = new Comprobacion();
 
         String codA = txtCodigo.getText();
-        String dni = txtDNI.getText();
-        String matri = txtMatricula.getText();
-        String ofi1 = (String) cboOfiR.getSelectedItem();
-        String ofi2 = (String) cboOfiE.getSelectedItem();
         String reser = txtReserva.getText();
 
-        if (!dni.equals("") && cv.esNumerico(dni) && cv.esNumerico(reser)) {
+        if (cv.esNumerico(reser)) {
             int codAl = Integer.parseInt(codA);
             int codRes = Integer.parseInt(reser);
 
-            alq.setCod_Alquiler(codAl);
-            alq.setDni(dni);
-            alq.setCod_Ofi_1_a(modAl.codOficiona(ofi1));
-            alq.setCod_Ofi_2_a(modAl.codOficiona(ofi2));
-            alq.setNum_matricula(matri);
-            alq.setCod_reserva(codRes);
-
-            if (modAl.modificar(alq)) {
+            if (modAl.modificar(codRes, codAl)) {
                 JOptionPane.showMessageDialog(null, "Registro editado correctamente");
                 modAl.datos("", tbAlquiler);
                 limpiar();
@@ -453,25 +441,14 @@ public class frmAlquilar extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        Alquiler alq = new Alquiler();
         Comprobacion cv = new Comprobacion();
 
-        String dni = txtDNI.getText();
-        String matri = txtMatricula.getText();
-        String ofi1 = (String) cboOfiR.getSelectedItem();
-        String ofi2 = (String) cboOfiE.getSelectedItem();
         String reser = txtReserva.getText();
 
-        if (!dni.equals("") && cv.esNumerico(dni) && cv.esNumerico(reser)) {
+        if (cv.esNumerico(reser)) {
             int codRes = Integer.parseInt(reser);
 
-            alq.setDni(dni);
-            alq.setCod_Ofi_1_a(modAl.codOficiona(ofi1));
-            alq.setCod_Ofi_2_a(modAl.codOficiona(ofi2));
-            alq.setNum_matricula(matri);
-            alq.setCod_reserva(codRes);
-
-            if (modAl.insertar(alq) > 0) {
+            if (modAl.insertar(codRes)) {
                 JOptionPane.showMessageDialog(null, "Registro guardado");
                 modAl.datos("", tbAlquiler);
                 limpiar();
@@ -488,7 +465,7 @@ public class frmAlquilar extends javax.swing.JFrame {
         Comprobacion cv = new Comprobacion();
 
         if (cv.esNumerico(codA)) {
-            if (modAl.eliminar(Integer.parseInt(codA)) > 0) {
+            if (modAl.eliminar(Integer.parseInt(codA))) {
                 JOptionPane.showMessageDialog(null, "Registro eliminado correctamente");
                 modAl.datos("", tbAlquiler);
                 limpiar();
