@@ -91,6 +91,7 @@ public class CtrlReservas extends conexion {
             }
         }
     }
+    
     public void cargarModelos(JComboBox cbo) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -112,7 +113,6 @@ public class CtrlReservas extends conexion {
             }
         }
     }
-
 
     public void cargarOficionas(JComboBox cbo) {
         PreparedStatement ps = null;

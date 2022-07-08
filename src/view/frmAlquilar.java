@@ -589,15 +589,4 @@ public class frmAlquilar extends javax.swing.JFrame {
         }
         return 0;
     }
-
-    private int cboNom(JComboBox cbo, int cod) {
-        String nomOfi = modAl.nomOficina(cod);
-        for (int i = 0; i < cbo.getItemCount(); i++) {
-            cbo.setSelectedIndex(i);
-            if (cbo.getSelectedItem().toString().equals(nomOfi)) {
-                return i;
-            }
-        }
-        return 0;
-    }
 }

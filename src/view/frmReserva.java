@@ -5,6 +5,7 @@ import tables.Reservas;
 import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import modelo.Comprobacion;
 
@@ -26,10 +27,10 @@ public class frmReserva extends javax.swing.JFrame {
         if (cn == null) {
             JOptionPane.showMessageDialog(null, "Error al conectar");
         } else {
-            modRes.datos("", tbRegis);
             modRes.cargarModelos(cboModelo);
             modRes.cargarOficionas(cboOfiR);
             modRes.cargarOficionas(cboOfiE);
+            modRes.datos("", tbRegis);
         }
     }
 
@@ -62,14 +63,14 @@ public class frmReserva extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         txtDNI = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tbRegis = new javax.swing.JTable();
         btnNuevo = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tbRegis = new javax.swing.JTable();
 
         jLabel1.setText("jLabel1");
 
@@ -121,7 +122,7 @@ public class frmReserva extends javax.swing.JFrame {
                 .addComponent(jLabel13)
                 .addGap(20, 20, 20)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 181, Short.MAX_VALUE)
                 .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
         );
@@ -136,7 +137,7 @@ public class frmReserva extends javax.swing.JFrame {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 735, 100));
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 740, 100));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -160,11 +161,6 @@ public class frmReserva extends javax.swing.JFrame {
         jLabel9.setText("Modelo del Auto");
 
         txtPrecio.setEnabled(false);
-        txtPrecio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPrecioActionPerformed(evt);
-            }
-        });
 
         jLabel7.setForeground(new java.awt.Color(51, 51, 51));
         jLabel7.setText("Precio Acordado");
@@ -177,12 +173,6 @@ public class frmReserva extends javax.swing.JFrame {
 
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("DNI");
-
-        txtDNI.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDNIActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -266,36 +256,6 @@ public class frmReserva extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(452, 403));
-
-        tbRegis.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
-        tbRegis.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "DNI", "Apellido Paterno", "Apellido Materno", "Nombres", "Dirección", "Teléfono"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tbRegis.setPreferredSize(new java.awt.Dimension(459, 0));
-        jScrollPane2.setViewportView(tbRegis);
-
         btnNuevo.setBackground(new java.awt.Color(51, 108, 131));
         btnNuevo.setFont(new java.awt.Font("Tw Cen MT", 1, 14)); // NOI18N
         btnNuevo.setForeground(new java.awt.Color(255, 255, 255));
@@ -368,17 +328,23 @@ public class frmReserva extends javax.swing.JFrame {
             }
         });
 
+        tbRegis.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        tbRegis.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(tbRegis);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(69, 69, 69)
                         .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -391,8 +357,13 @@ public class frmReserva extends javax.swing.JFrame {
                         .addGap(6, 6, 6)
                         .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -434,10 +405,10 @@ public class frmReserva extends javax.swing.JFrame {
             reser.setCod_Reserva(Integer.parseInt(cod));
             if (modRes.buscar(reser)) {
                 txtDNI.setText(reser.getDni());
-//                txtMatricula.setText(.getNum_matricula());
-//                txtReserva.setText(String.valueOf(alq.getCod_reserva()));
-//                cboOfiR.setSelectedIndex(cboIndex(cboOfiR, alq.getCod_Ofi_1_a()));
-//                cboOfiE.setSelectedIndex(cboIndex(cboOfiE, alq.getCod_Ofi_2_a()));
+                cboModelo.setSelectedIndex(cboModelo(cboModelo, reser.getModelo()));
+                cboOfiR.setSelectedIndex(cboIndex(cboOfiR, reser.getCod_Ofi_1_r()));
+                cboOfiE.setSelectedIndex(cboIndex(cboOfiE, reser.getCod_Ofi_2_r()));
+                txtPrecio.setText(String.valueOf(reser.getPrecio_acordado()));
                 try {
                     java.util.Date fechaInicio = new SimpleDateFormat("yyyy-MM-dd").parse(reser.getFecha_final_res().toString());
                     dcFeIni.setDate(fechaInicio);
@@ -486,42 +457,29 @@ public class frmReserva extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPrecioActionPerformed
-
-    private void txtDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDNIActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDNIActionPerformed
-
-    /*public static void main(String args[]) {
-    try {
-    for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-    if ("Windows".equals(info.getName())) {
-    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-    break;
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new frmReserva().setVisible(true);
+            }
+        });
     }
-    }
-    } catch (ClassNotFoundException ex) {
-    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (InstantiationException ex) {
-    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (IllegalAccessException ex) {
-    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    java.awt.EventQueue.invokeLater(new Runnable() {
-    public void run() {
-    try {
-    new frmReserva().setVisible(true);
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-    Logger.getLogger(frmReserva.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    }
-    });
-    }*/
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEditar;
@@ -562,5 +520,26 @@ public class frmReserva extends javax.swing.JFrame {
         txtCod.setText(null);
         txtPrecio.setText(null);
         txtCod.requestFocus();
+    }
+
+    private int cboIndex(JComboBox cbo, int cod) {
+        String nomOfi = modRes.nomOficina(cod);
+        for (int i = 0; i < cbo.getItemCount(); i++) {
+            cbo.setSelectedIndex(i);
+            if (cbo.getSelectedItem().toString().equals(nomOfi)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private int cboModelo(JComboBox cbo, String model) {
+        for (int i = 0; i < cbo.getItemCount(); i++) {
+            cbo.setSelectedIndex(i);
+            if (cbo.getSelectedItem().toString().equals(model)) {
+                return i;
+            }
+        }
+        return 0;
     }
 }
