@@ -19,7 +19,7 @@ public class CtrlReservas extends conexion {
     public void datos(String valor, JTable table) {
         try {
             Connection con = establecerConexion();
-            String[] titulos = {"Código", "Fecha inicial", "Fecha final", "Precio", "DNI", "Modelo"};
+            String[] titulos = {"Código", "Fecha inicial", "Fecha final", "Precio", "DNI", "Modelo", "Ofi. Entrega", "Ofi. Recojo"};
 
             DefaultTableModel modelo = new DefaultTableModel(null, titulos);
             table.setModel(modelo);
@@ -27,14 +27,14 @@ public class CtrlReservas extends conexion {
             PreparedStatement ps = null;
             ResultSet rs = null;
 
-            String sql = "SELECT cod_Reserva, fecha_inicio_res, fecha_final_res, precio_acordado, dni, modelo FROM Reservas WHERE dni LIKE '%" + valor + "%'";
+            String sql = "SELECT cod_Reserva, fecha_inicio_res, fecha_final_res, precio_acordado, dni, modelo, cod_Ofi_1_r, cod_Ofi_2_r FROM Reservas WHERE dni LIKE '%" + valor + "%'";
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
 
             ResultSetMetaData rsMd = rs.getMetaData();
             int rowsCount = rsMd.getColumnCount();
 
-            int[] columnWith = {80, 80, 80, 100, 100, 80, 120};
+            int[] columnWith = {80, 100, 100, 60, 80, 98, 80, 80};
 
             for (int x = 0; x < rowsCount; x++) {
                 table.getColumnModel().getColumn(x).setPreferredWidth(columnWith[x]);

@@ -5,8 +5,12 @@ import tables.Reservas;
 import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import modelo.Comprobacion;
 
 public class frmReserva extends javax.swing.JFrame {
@@ -20,6 +24,19 @@ public class frmReserva extends javax.swing.JFrame {
         cboOfiE.addItem("- Selecionar -");
         conexion();
         jPanel1.setOpaque(false);
+
+        //default time zone
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+
+        //creating the instance of LocalDate using the day, month, year info
+        LocalDate localDate = LocalDate.of(2016, 8, 19);
+
+        //local date + atStartOfDay() + default time zone + toInstant() = Date
+        Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+
+        //Displaying LocalDate and Date
+        System.out.println("LocalDate is: " + localDate);
+        System.out.println("Date is: " + date);
     }
 
     private void conexion() {
@@ -159,8 +176,6 @@ public class frmReserva extends javax.swing.JFrame {
 
         jLabel9.setForeground(new java.awt.Color(51, 51, 51));
         jLabel9.setText("Modelo del Auto");
-
-        txtPrecio.setEnabled(false);
 
         jLabel7.setForeground(new java.awt.Color(51, 51, 51));
         jLabel7.setText("Precio Acordado");
@@ -410,13 +425,14 @@ public class frmReserva extends javax.swing.JFrame {
                 cboOfiE.setSelectedIndex(cboIndex(cboOfiE, reser.getCod_Ofi_2_r()));
                 txtPrecio.setText(String.valueOf(reser.getPrecio_acordado()));
                 try {
-                    java.util.Date fechaInicio = new SimpleDateFormat("yyyy-MM-dd").parse(reser.getFecha_final_res().toString());
+                    java.util.Date fechaInicio = new SimpleDateFormat("yyyy-MM-dd").parse(reser.getFecha_inicio_res().toString());
                     dcFeIni.setDate(fechaInicio);
                     java.util.Date fechaFinal = new SimpleDateFormat("yyyy-MM-dd").parse(reser.getFecha_final_res().toString());
                     dcFeFin.setDate(fechaFinal);
                 } catch (ParseException ex) {
                     JOptionPane.showMessageDialog(null, "No se pudieron consultar todos los datos");
                 }
+                modRes.datos(reser.getDni(), tbRegis);
             } else {
                 JOptionPane.showMessageDialog(null, "No se pudo encontrar");
                 limpiar();
@@ -427,11 +443,89 @@ public class frmReserva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        Reservas reser = new Reservas();
+        Comprobacion cv = new Comprobacion();
 
+        String cod = txtCod.getText();
+        String dni = txtDNI.getText();
+        String ofi1 = (String) cboOfiR.getSelectedItem();
+        String ofi2 = (String) cboOfiE.getSelectedItem();
+        String prec = txtPrecio.getText();
+
+        if (!dni.equals("") && cv.esNumerico(dni) && cv.esNumerico(prec)) {
+            int codRe = Integer.parseInt(cod);
+            int precio = Integer.parseInt(prec);
+
+            reser.setCod_Reserva(codRe);
+            reser.setDni(dni);
+            reser.setModelo(cboModelo.getSelectedItem().toString());
+            reser.setCod_Ofi_1_r(modRes.codOficiona(ofi1));
+            reser.setCod_Ofi_2_r(modRes.codOficiona(ofi2));
+            reser.setPrecio_acordado(precio);
+
+            ZoneId defaultZoneId = ZoneId.systemDefault();
+            String recojo = ((JTextField) dcFeIni.getDateEditor().getUiComponent()).getText();
+            String entrega = ((JTextField) dcFeIni.getDateEditor().getUiComponent()).getText();
+
+            LocalDate fecIniLD = LocalDate.parse(recojo);
+            LocalDate fecFinLD = LocalDate.parse(entrega);
+
+            Date fecIni = Date.from(fecIniLD.atStartOfDay(defaultZoneId).toInstant());
+            Date fecFin = Date.from(fecFinLD.atStartOfDay(defaultZoneId).toInstant());
+            reser.setFecha_inicio_res(fecIni);
+            reser.setFecha_final_res(fecFin);
+
+            if (modRes.modificar(reser, cod)) {
+                JOptionPane.showMessageDialog(null, "Registro editado correctamente");
+//                modAl.datos("", tbAlquiler);
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se puedo editar el registro");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingresar datos");
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        Reservas reser = new Reservas();
+        Comprobacion cv = new Comprobacion();
 
+        String dni = txtDNI.getText();
+        String ofi1 = (String) cboOfiR.getSelectedItem();
+        String ofi2 = (String) cboOfiE.getSelectedItem();
+        String prec = txtPrecio.getText();
+
+        if (!dni.equals("") && cv.esNumerico(dni) && cv.esNumerico(prec)) {
+            int precio = Integer.parseInt(prec);
+
+            reser.setDni(dni);
+            reser.setModelo(cboModelo.getSelectedItem().toString());
+            reser.setCod_Ofi_1_r(modRes.codOficiona(ofi1));
+            reser.setCod_Ofi_2_r(modRes.codOficiona(ofi2));
+            reser.setPrecio_acordado(precio);
+
+            ZoneId defaultZoneId = ZoneId.systemDefault();
+            String recojo = ((JTextField) dcFeIni.getDateEditor().getUiComponent()).getText();
+            String entrega = ((JTextField) dcFeIni.getDateEditor().getUiComponent()).getText();
+
+            LocalDate fecIniLD = LocalDate.parse(recojo);
+            LocalDate fecFinLD = LocalDate.parse(entrega);
+
+            Date fecIni = Date.from(fecIniLD.atStartOfDay(defaultZoneId).toInstant());
+            Date fecFin = Date.from(fecFinLD.atStartOfDay(defaultZoneId).toInstant());
+            reser.setFecha_inicio_res(fecIni);
+            reser.setFecha_final_res(fecFin);
+            
+            if (modRes.insertar(reser) > 0) {
+                JOptionPane.showMessageDialog(null, "Registro guardado");
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo guardar el registro");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingresar datos");
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -457,29 +551,30 @@ public class frmReserva extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmReserva().setVisible(true);
-            }
-        });
+    /* public static void main(String args[]) {
+    try {
+    for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+    if ("Windows".equals(info.getName())) {
+    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+    break;
     }
+    }
+    } catch (ClassNotFoundException ex) {
+    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+    java.util.logging.Logger.getLogger(frmReserva.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    }
+    java.awt.EventQueue.invokeLater(new Runnable() {
+    public void run() {
+    new frmReserva().setVisible(true);
+    }
+    });
+    }*/
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEditar;
