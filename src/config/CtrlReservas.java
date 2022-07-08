@@ -20,7 +20,7 @@ public class CtrlReservas extends conexion {
     public void datos(String valor, JTable table) {
         try {
             Connection con = establecerConexion();
-            String[] titulos = {"Código", "Fecha inicial", "Fecha final", "Precio", "DNI", "Modelo", "Ofi. Entrega", "Ofi. Recojo"};
+            String[] titulos = {"Código", "Fecha inicial", "Fecha final", "Precio", "DNI", "Modelo", "Ofi. Recojo", "Ofi. Entrega"};
 
             DefaultTableModel modelo = new DefaultTableModel(null, titulos);
             table.setModel(modelo);
@@ -28,7 +28,13 @@ public class CtrlReservas extends conexion {
             PreparedStatement ps = null;
             ResultSet rs = null;
 
-            String sql = "SELECT cod_Reserva, fecha_inicio_res, fecha_final_res, precio_acordado, dni, modelo, cod_Ofi_1_r, cod_Ofi_2_r FROM Reservas WHERE dni LIKE '%" + valor + "%'";
+            String sql = "SELECT R.cod_Reserva, R.fecha_inicio_res, R.fecha_final_res, R.precio_acordado, R.dni, R.modelo, O1.nom_Oficina, O2.nom_Oficina "
+                        + "FROM reservas AS R "
+                        + "INNER JOIN oficina AS O1 "
+                        + "ON R.cod_Ofi_1_r = O1.cod_Oficina "
+                        + "INNER JOIN oficina AS O2 "
+                        + "ON r.cod_Ofi_2_r = O2.cod_Oficina "
+                        + "WHERE dni LIKE '%" + valor + "%'";
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -63,6 +69,13 @@ public class CtrlReservas extends conexion {
         ResultSet rs = null;
         Connection cn = establecerConexion();
         String sql = "SELECT cod_Reserva, fecha_inicio_res, fecha_final_res, precio_acordado, dni, cod_Ofi_1_r, cod_Ofi_2_r, modelo FROM Reservas WHERE cod_Reserva = ?";
+        /* String sql = "SELECT R.cod_Reserva, R.fecha_inicio_res, R.fecha_final_res, R.precio_acordado, R.dni, R.modelo, O1.nom_Oficina, O2.nom_Oficina 
+                    + "FROM reservas AS R"
+                    + "INNER JOIN bdrentaauto.oficina AS O1 "
+                    + "ON R.cod_Ofi_1_r = O1.cod_Oficina "
+                    + "INNER JOIN bdrentaauto.oficina AS O2 "
+                    + "ON r.cod_Ofi_2_r = O2.cod_Oficina "
+                    + "WHERE cod_Reserva = 1"; */
         try {
             ps = cn.prepareStatement(sql);
             ps.setInt(1, reser.getCod_Reserva());
@@ -219,23 +232,23 @@ public class CtrlReservas extends conexion {
         }
     }
 
-    public boolean modificar(Reservas reser, String cod) {
+    public boolean modificar(Reservas reser) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection cn = establecerConexion();
+        SimpleDateFormat formatofecha = new SimpleDateFormat("yyyy-MM-dd");
         int res = 0;
-        String sql = "UPDATE reservas SET cod_Reserva = ?, fecha_inicio_res = ?, fecha_final_res = ?, precio_acordado = ?, dni = ?, cod_Ofi_1_r = ?, cod_Ofi_2_r = ?, modelo = ? WHERE cod_Reserva = ?";
+        String sql = "UPDATE reservas SET fecha_inicio_res = ?, fecha_final_res = ?, precio_acordado = ?, dni = ?, cod_Ofi_1_r = ?, cod_Ofi_2_r = ?, modelo = ? WHERE cod_Reserva = ?";
         try {
             ps = cn.prepareStatement(sql);
-            ps.setInt(1, reser.getCod_Reserva());
-            ps.setDate(2, (Date) reser.getFecha_inicio_res());
-            ps.setDate(3, (Date) reser.getFecha_final_res());
-            ps.setDouble(4, reser.getPrecio_acordado());
-            ps.setString(5, reser.getDni());
-            ps.setInt(6, reser.getCod_Ofi_1_r());
-            ps.setInt(7, reser.getCod_Ofi_2_r());
-            ps.setString(8, reser.getModelo());
-            ps.setString(9, cod);
+            ps.setString(1, formatofecha.format(reser.getFecha_inicio_res()));
+            ps.setString(2, formatofecha.format(reser.getFecha_final_res()));
+            ps.setDouble(3, reser.getPrecio_acordado());
+            ps.setString(4, reser.getDni());
+            ps.setInt(5, reser.getCod_Ofi_1_r());
+            ps.setInt(6, reser.getCod_Ofi_2_r());
+            ps.setString(7, reser.getModelo());
+            ps.setInt(8, reser.getCod_Reserva());
             res = ps.executeUpdate();
             return res > 0;
         } catch (SQLException ex) {

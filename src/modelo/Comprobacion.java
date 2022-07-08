@@ -10,4 +10,13 @@ public class Comprobacion {
         }
         return true;
     }
+
+    public boolean isDouble(String text) {
+        try {
+            double num = Double.parseDouble(text);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
 }

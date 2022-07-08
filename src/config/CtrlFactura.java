@@ -29,7 +29,22 @@ public class CtrlFactura extends conexion {
             PreparedStatement ps = null;
             ResultSet rs = null;
 
-            String sql = "SELECT F.num_Factura, F.fecha, F.precio, F.igv, F.total, C.dni, concat(C.apellido_paterno, ' ', C.apellido_materno) AS Apellidos, "
+            String sql = "SELECT DISTINCT F.num_Factura, F.fecha, F.precio, F.igv, F.total, C.dni, concat(C.apellido_paterno, ' ', C.apellido_materno) AS Apellidos, "
+                        + "C.nombre, C.telefono, A.fecha_final_al, O1.nom_Oficina, O2.nom_Oficina "
+                        + "FROM bdrentaauto.factura AS F "
+                        + "inner join bdrentaauto.clientes AS C "
+                        + "ON F.dni = C.dni "
+                        + "inner join bdrentaauto.alquiler AS A "
+                        + "ON C.dni = A.dni "
+                        + "inner join bdrentaauto.reservas AS R "
+                        + "ON R.cod_Reserva = A.cod_reserva "
+                        + "inner join bdrentaauto.oficina AS O1 "
+                        + "ON R.cod_Ofi_1_r = O1.cod_Oficina "
+                        + "inner join bdrentaauto.oficina AS O2 "
+                        + "ON R.cod_Ofi_2_r = O2.cod_Oficina "
+                        + "WHERE F.num_Factura LIKE '%%' and C.dni LIKE '%%' and F.fecha = A.fecha_inicio_al "
+                        + "ORDER BY F.num_Factura ASC";
+            /* String sql = "SELECT F.num_Factura, F.fecha, F.precio, F.igv, F.total, C.dni, concat(C.apellido_paterno, ' ', C.apellido_materno) AS Apellidos, "
                     + "C.nombre, C.telefono AS 'telefono', A.fecha_final_al AS 'Entrega', O1.nom_Oficina AS 'Ofi recojer', O2.nom_Oficina AS 'Ofi entrega' "
                     + "FROM factura AS F "
                     + "inner join clientes AS C "
@@ -41,7 +56,7 @@ public class CtrlFactura extends conexion {
                     + "inner join oficina AS O2 "
                     + "ON A.cod_Ofi_2_a = O2.cod_Oficina "
                     + "WHERE F.num_Factura LIKE '%" + valor + "%' and C.dni LIKE '%" + dni + "%' and F.fecha = A.fecha_inicio_al "
-                    + "ORDER BY F.num_Factura ASC";
+                    + "ORDER BY F.num_Factura ASC"; */
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
 

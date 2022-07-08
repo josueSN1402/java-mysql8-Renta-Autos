@@ -3,7 +3,6 @@ package config;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tables.Alquiler;
-import java.sql.Date;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
@@ -177,9 +176,14 @@ public class CtrlAlquiler extends conexion {
         ResultSet rs = null;
         Connection cn = establecerConexion();
         int res = 0;
-        String sql = "INSERT INTO alquiler (fecha_inicio_al, fecha_final_al, dni, cod_Ofi_1_a, cod_Ofi_2_a, num_matricula, cod_reserva) VALUES ("
+        /* String sql = "INSERT INTO alquiler (fecha_inicio_al, fecha_final_al, dni, cod_Ofi_1_a, cod_Ofi_2_a, num_matricula, cod_reserva) VALUES ("
                 + "(SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
-                + "?, ?, ?, ?, ?)";
+                + "?, ?, ?, ?, ?)"; */
+        String sql = "INSERT INTO alquiler (fecha_inicio_al, fecha_final_al, dni, cod_Ofi_1_a, cod_Ofi_2_a, num_matricula, cod_reserva) VALUES ("
+                    +" (SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
+                    +" (SELECT dni FROM reservas where cod_Reserva = ?), (SELECT cod_Ofi_1_r FROM reservas where cod_Reserva = ?), "
+                    +" (SELECT cod_Ofi_2_r FROM reservas where cod_Reserva = ?), "
+                    +" (SELECT numero_Matricula FROM coches where modelo = (SELECT modelo FROM reservas where cod_Reserva = ?)), ?)"; 
         try {
             ps = cn.prepareStatement(sql);
             ps.setInt(1, alq.getCod_reserva());
@@ -208,11 +212,18 @@ public class CtrlAlquiler extends conexion {
         ResultSet rs = null;
         Connection cn = establecerConexion();
         int res = 0;
-        String sql = "UPDATE alquiler SET dni = ?, cod_Ofi_1_a = ?, cod_Ofi_2_a = ?, "
+        /* String sql = "UPDATE alquiler SET dni = ?, cod_Ofi_1_a = ?, cod_Ofi_2_a = ?, "
                 + "fecha_inicio_al = (SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), "
                 + "fecha_final_al = (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
                 + "num_matricula = ?, cod_reserva = ? "
-                + "WHERE cod_Alquiler = ?";
+                + "WHERE cod_Alquiler = ?"; */
+        String sql = "UPDATE bdrentaauto.alquiler SET dni = (SELECT dni FROM reservas where cod_Reserva = ?), "
+                    + "cod_Ofi_1_a = (SELECT cod_Ofi_1_r FROM reservas where cod_Reserva = ?), "
+                    + "cod_Ofi_2_a = (SELECT cod_Ofi_2_r FROM reservas where cod_Reserva = ?), "
+                    + "fecha_inicio_al = (SELECT fecha_inicio_res FROM reservas where cod_Reserva = ?), "
+                    + "fecha_final_al = (SELECT fecha_final_res FROM reservas where cod_Reserva = ?), "
+                    + "num_matricula = (SELECT numero_Matricula FROM coches where modelo = (SELECT modelo FROM reservas where cod_Reserva = ?)), "
+                    + "cod_reserva = ? WHERE cod_Alquiler = ?";
         try {
             ps = cn.prepareStatement(sql);
             ps.setString(1, alq.getDni());
